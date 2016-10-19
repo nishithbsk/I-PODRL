@@ -1,0 +1,3 @@
+[submodule "ref_libs/keras-rl"]
+	path = ref_libs/keras-rl
+	url = https://github.com/matthiasplappert/keras-rl.git
