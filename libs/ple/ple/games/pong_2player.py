@@ -171,10 +171,12 @@ class Pong_2Player(base.Game):
 			"agent_2": 0.0
 		}
 
-	def _handle_player_1_events(self):
+	def _handle_player_events(self):
 		self.dy_1 = 0
+		count = 0
 		for event in pygame.event.get():
-                        print "Received action from player 1"
+			count += 1
+			print "Player:", count
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
@@ -182,27 +184,17 @@ class Pong_2Player(base.Game):
 			if event.type == pygame.KEYDOWN:
 				key = event.key
 				if key == self.actions['up']:
-                                        self.dy_1 -= self.players_speed
+					if count == 1:
+                                        	self.dy_1 -= self.players_speed
+					elif count == 2:
+						self.dy_2 -= self.players_speed
 
 				if key == self.actions['down']:
-					self.dy_1 += self.players_speed
+					if count == 1:
+						self.dy_1 += self.players_speed
+					elif count == 2:
+						self.dy_2 += self.players_speed
 
-	def _handle_player_2_events(self):
-		self.dy_2 = 0
-		for event in pygame.event.get():
-                        print "Received action from player 2"
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				sys.exit()
-
-			if event.type == pygame.KEYDOWN:
-				key = event.key
-				if key == self.actions['up']:
-                                        self.dy_2 -= self.players_speed
-
-				if key == self.actions['down']:
-					self.dy_2 += self.players_speed
-        
         def getGameState(self):
             """
             Gets a non-visual state representation of the game.
@@ -299,8 +291,7 @@ class Pong_2Player(base.Game):
 
 		self.screen.fill((0,0,0))
 
-		self._handle_player_1_events()
-                self._handle_player_2_events()
+		self._handle_player_events()
 
 		#logic
 		if self.ball.pos.x <= 0:
