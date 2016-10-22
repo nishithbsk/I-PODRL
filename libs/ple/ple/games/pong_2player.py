@@ -2,7 +2,7 @@ import math
 import sys
 
 import pygame
-from pygame.constants import K_w, K_s
+from pygame.constants import K_w, K_s, K_a, K_b
 from utils.vec2d import vec2d
 from utils import percent_round_int
 
@@ -147,8 +147,10 @@ class Pong_2Player(base.Game):
 	def __init__(self, width=64, height=48, MAX_SCORE=11):
 
 		actions = {
-			"up": K_w,
-			"down": K_s
+			"up_agent_1": K_w,
+			"down_agent_1": K_s,
+                        "up_agent_2": K_a,
+                        "down_agent_2": K_b
 		}
 
                 base.Game.__init__(self, width, height, actions=actions)
@@ -173,27 +175,22 @@ class Pong_2Player(base.Game):
 
 	def _handle_player_events(self):
 		self.dy_1 = 0
-		count = 0
+		self.dy_2 = 0
 		for event in pygame.event.get():
-			count += 1
-			print "Player:", count
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
 
 			if event.type == pygame.KEYDOWN:
-				key = event.key
-				if key == self.actions['up']:
-					if count == 1:
-                                        	self.dy_1 -= self.players_speed
-					elif count == 2:
-						self.dy_2 -= self.players_speed
-
-				if key == self.actions['down']:
-					if count == 1:
-						self.dy_1 += self.players_speed
-					elif count == 2:
-						self.dy_2 += self.players_speed
+			        key = event.key
+				if key == self.actions['up_agent_1']:
+                                        self.dy_1 -= self.players_speed
+				if key == self.actions['up_agent_2']:
+                                        self.dy_2 -= self.players_speed
+				if key == self.actions['down_agent_1']:
+					self.dy_1 += self.players_speed
+                                if key == self.actions['down_agent_2']:
+					self.dy_2 += self.players_speed
 
         def getGameState(self):
             """
@@ -288,7 +285,6 @@ class Pong_2Player(base.Game):
             self.ball.vel.y = (self.rng.random_sample()*self.ball_speed)-self.ball_speed
 
 	def step(self, dt):
-
 		self.screen.fill((0,0,0))
 
 		self._handle_player_events()
